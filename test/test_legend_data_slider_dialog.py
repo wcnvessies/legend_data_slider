@@ -8,17 +8,17 @@
 
 """
 
-__author__ = 'wcn.vessies@gmail.com'
-__date__ = '2024-09-24'
-__copyright__ = 'Copyright 2024, W.C.N. Vessies'
+__author__ = "wcn.vessies@gmail.com"
+__date__ = "2024-09-24"
+__copyright__ = "Copyright 2024, W.C.N. Vessies"
 
 import unittest
 
-from qgis.PyQt.QtGui import QDialogButtonBox, QDialog
+from qgis.PyQt.QtGui import QDialog, QDialogButtonBox
+from utilities import get_qgis_app
 
 from legend_data_slider_dialog import LegendDataSliderDialog
 
-from utilities import get_qgis_app
 QGIS_APP = get_qgis_app()
 
 
@@ -48,8 +48,8 @@ class LegendDataSliderDialogTest(unittest.TestCase):
         result = self.dialog.result()
         self.assertEqual(result, QDialog.Rejected)
 
+
 if __name__ == "__main__":
     suite = unittest.makeSuite(LegendDataSliderDialogTest)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
-

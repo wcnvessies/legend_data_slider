@@ -33,4 +33,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .legend_data_slider import LegendDataSlider
+
     return LegendDataSlider(iface)

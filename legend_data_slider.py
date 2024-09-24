@@ -21,15 +21,20 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+import os.path
+
+from qgis.gui import QgsGui
+from qgis.PyQt.QtCore import QCoreApplication, QSettings, QTranslator
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
-# Initialize Qt resources from file resources.py
-from .resources import *
+from .data_layer_filter_widget import RangeFilterWidgetProvider
+
 # Import the code for the dialog
 from .legend_data_slider_dialog import LegendDataSliderDialog
-import os.path
+
+# Initialize Qt resources from file resources.py
+from .resources import *
 
 
 class LegendDataSlider:
@@ -48,11 +53,10 @@ class LegendDataSlider:
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
+        locale = QSettings().value("locale/userLocale")[:2]
         locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'LegendDataSlider_{}.qm'.format(locale))
+            self.plugin_dir, "i18n", f"LegendDataSlider_{locale}.qm"
+        )
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -61,11 +65,14 @@ class LegendDataSlider:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Legend Data Slider')
+        self.menu = self.tr("&Legend Data Slider")
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
+
+        provider = RangeFilterWidgetProvider()
+        QgsGui.layerTreeEmbeddedWidgetRegistry().addProvider(provider)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -80,8 +87,7 @@ class LegendDataSlider:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('LegendDataSlider', message)
-
+        return QCoreApplication.translate("LegendDataSlider", message)
 
     def add_action(
         self,
@@ -93,7 +99,8 @@ class LegendDataSlider:
         add_to_toolbar=True,
         status_tip=None,
         whats_this=None,
-        parent=None):
+        parent=None,
+    ):
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -149,9 +156,7 @@ class LegendDataSlider:
             self.iface.addToolBarIcon(action)
 
         if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
+            self.iface.addPluginToMenu(self.menu, action)
 
         self.actions.append(action)
 
@@ -159,33 +164,32 @@ class LegendDataSlider:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        # NOTE we do none of this stuff but we do keep the code below in case we do want to add a menu at some point
 
-        icon_path = ':/plugins/legend_data_slider/icon.png'
-        self.add_action(
-            icon_path,
-            text=self.tr(u'Legend widget slider'),
-            callback=self.run,
-            parent=self.iface.mainWindow())
+        # icon_path = ":/plugins/legend_data_slider/icon.png"
+        # self.add_action(
+        #     icon_path,
+        #     text=self.tr("Legend widget slider"),
+        #     callback=self.run,
+        #     parent=self.iface.mainWindow(),
+        # )
 
-        # will be set False in run()
-        self.first_start = True
-
+        # # will be set False in run()
+        # self.first_start = True
+        return None
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginMenu(
-                self.tr(u'&Legend Data Slider'),
-                action)
+            self.iface.removePluginMenu(self.tr("&Legend Data Slider"), action)
             self.iface.removeToolBarIcon(action)
-
 
     def run(self):
         """Run method that performs all the real work"""
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        if self.first_start == True:
+        if self.first_start is True:
             self.first_start = False
             self.dlg = LegendDataSliderDialog()
 
@@ -194,7 +198,7 @@ class LegendDataSlider:
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+        # if result:
+        #     # Do something useful here - delete the line containing pass and
+        #     # substitute with your code.
+        #     pass

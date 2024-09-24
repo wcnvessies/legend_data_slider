@@ -8,14 +8,13 @@
 
 """
 
-__author__ = 'wcn.vessies@gmail.com'
-__date__ = '2024-09-24'
-__copyright__ = 'Copyright 2024, W.C.N. Vessies'
+__author__ = "wcn.vessies@gmail.com"
+__date__ = "2024-09-24"
+__copyright__ = "Copyright 2024, W.C.N. Vessies"
 
 import unittest
 
 from qgis.PyQt.QtGui import QIcon
-
 
 
 class LegendDataSliderDialogTest(unittest.TestCase):
@@ -31,14 +30,12 @@ class LegendDataSliderDialogTest(unittest.TestCase):
 
     def test_icon_png(self):
         """Test we can click OK."""
-        path = ':/plugins/LegendDataSlider/icon.png'
+        path = ":/plugins/LegendDataSlider/icon.png"
         icon = QIcon(path)
         self.assertFalse(icon.isNull())
+
 
 if __name__ == "__main__":
     suite = unittest.makeSuite(LegendDataSliderResourcesTest)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
-
-
-
